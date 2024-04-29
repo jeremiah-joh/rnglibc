@@ -74,7 +74,7 @@ prng_32()
 size_t
 prng()
 {
-	if (!s[0] && !s[2] && !s[2] && !s[3])
+	if (!(s[0] | s[1] | s[2] | s[3]))
 		return osrng();
 	if (sizeof(size_t) == 8)
 		return prng_64();
