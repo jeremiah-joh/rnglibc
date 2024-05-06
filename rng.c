@@ -74,10 +74,14 @@ prng_32()
 size_t
 prng()
 {
+	size_t i;
 	if (!(s[0] | s[1] | s[2] | s[3]))
-		return osrng();
+		for (i = 0; i < 4; i++)
+			s[i] = osrng();
+
 	if (sizeof(size_t) == 8)
 		return prng_64();
+
 	return prng_32();
 }
 
@@ -85,14 +89,15 @@ size_t
 osrng()
 {
 	FILE *fp;
+	size_t r;
 
 	if ((fp = fopen("/dev/random", "rb")) == NULL)
 		return 0;
-	if (fread(s, sizeof(*s), sizeof(s), fp) < sizeof(s))
+	if (fread(&r, 1, sizeof(r), fp) < sizeof(r))
 		return 0;
 
 	fclose(fp);
 
-	return s[0] ^ s[1] ^ s[2] ^ s[3];
+	return r;
 }
 
