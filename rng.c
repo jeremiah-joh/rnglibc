@@ -21,6 +21,21 @@
 
 static size_t s[4] = { 0, 0, 0, 0 };
 
+static int
+osrng_buf(void *buf, const size_t len)
+{
+	FILE *fp;
+
+	if ((fp = fopen("/dev/random", "rb")) == NULL)
+		return -1;
+	if (fread(buf, 1, len, fp) < len)
+		return -1;
+
+	fclose(fp);
+
+	return 0;
+}
+
 static size_t
 rotl_64(const size_t x, int k)
 {
@@ -74,10 +89,9 @@ prng_32()
 size_t
 prng()
 {
-	size_t i;
 	if (!(s[0] | s[1] | s[2] | s[3]))
-		for (i = 0; i < 4; i++)
-			s[i] = osrng();
+		if (osrng_buf(s, sizeof(s)))
+			return 0;
 
 	if (sizeof(size_t) == 8)
 		return prng_64();
@@ -88,16 +102,7 @@ prng()
 size_t
 osrng()
 {
-	FILE *fp;
 	size_t r;
-
-	if ((fp = fopen("/dev/random", "rb")) == NULL)
-		return 0;
-	if (fread(&r, 1, sizeof(r), fp) < sizeof(r))
-		return 0;
-
-	fclose(fp);
-
-	return r;
+	return osrng_buf(&r, sizeof(r)) ? 0 : r;
 }
 
