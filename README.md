@@ -1,18 +1,21 @@
 Random Number Generator Library for C
 =====================================
 
-Collection of RNGs written in C90.
+Useful RNGs written in ANSI C.
 
-PRNG
-----
+Pseudo random number generator
+------------------------------
 
-`size_t prng()` returns pseudo-random number between 0 ~ Maximum value of `size_t`.  
-It uses xoshiro128++ when `size_t` is 32 bits, xoshiro256++ when it is 64 bits.  
-It initialize itself automatically by using `osrng()`.
+`size_t prng()` and `int prng_buf(void *, const size_t)`.
 
-OSRNG
------
+These functions use xoshiro128++ on 32 bit processor, xoshiro256++ on 64 bit.
+They initialize themselves by using `osrng_buf()` when all the numbers in
+state are zero.
 
-`size_t osrng()` returns random number provided by operating system.  
-Currently, it works on OSs with '/dev/random'.
+Operating system's random number generator
+------------------------------------------
+
+`size_t osrng()` and `int osrng_buf(void *, const size_t)`.
+
+These functions use '/dev/random' file of operating system.
 
