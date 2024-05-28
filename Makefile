@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -ansi -Wall
+CFLAGS = -ansi -Wall -Werror
 
 test:
 	$(CC) $(CFLAGS) src/rng.c test.c -g
