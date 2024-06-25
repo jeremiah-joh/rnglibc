@@ -71,7 +71,7 @@ size_t
 prng()
 {
 	/* initialize buffer if numbers in s are all zero */
-	if (!(s[0] | s[1] | s[2] | s[3]))
+	if ((s[0] | s[1] | s[2] | s[3]) == 0)
 		if (osrng_buf(s, sizeof(s)))
 			return 0;
 
