@@ -5,4 +5,4 @@ test:
 	$(CC) $(CFLAGS) src/rng.c test.c -g
 	./a.out
 clean:
-	rm -f ./a.out
+	rm -f a.out
