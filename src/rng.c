@@ -120,4 +120,3 @@ osrng_buf(void *buf, const size_t len)
 
 	return 0;
 }
-
