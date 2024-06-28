@@ -21,4 +21,3 @@ size_t	osrng();
 int	prng_buf(void *, const size_t);
 /* fill buffer with random number generator from operating system */
 int	osrng_buf(void *, const size_t);
-
