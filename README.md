@@ -20,4 +20,3 @@ Operating system's random number generator
 * `int osrng_buf(void *, const size_t)` fills buffer with random numbers.
 
 These functions use '/dev/random' file of operating system.
-
