@@ -100,7 +100,7 @@ prng_buf(void *buf, const size_t len)
 	for (i = 0; i < len; i += sizeof(size_t)) {
 		if ((r = prng()) == 0)
 			return -1;
-		memcpy(buf + i, &r, sizeof(size_t));
+		memcpy((size_t *)buf + i, &r, sizeof(size_t));
 	}
 
 	return 0;
