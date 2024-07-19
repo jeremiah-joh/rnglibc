@@ -97,11 +97,10 @@ prng_buf(void *buf, const size_t len)
 {
 	size_t i, r;
 
-	for (i = 0; i < len / sizeof(size_t); i++) {
-		if ((r = prng()) == 0)
-			return -1;
-		memcpy((size_t *)buf + i, &r, sizeof(size_t));
-	}
+	for (i = 0, r = prng(); i < len / sizeof(r); i++, r = prng())
+		memcpy((size_t *)buf + i, &r, sizeof(r));
+
+	memcpy((size_t *)buf + i, &r, len % sizeof(r));
 
 	return 0;
 }
@@ -128,13 +127,16 @@ main()
 {
 	size_t arr[2];
 
-	printf("%lu\n", osrng());
-	printf("%lu\n", prng());
+	printf("osrng     %lu\n", osrng());
+	printf("prng      %lu\n", prng());
 
 	osrng_buf(&arr, sizeof(arr));
-	printf("{ %lu, %lu }\n", arr[0], arr[1]);
+	printf("osrng_buf %lu, %lu\n", arr[0], arr[1]);
+
+	arr[0] = arr[1] = 0;
+
 	prng_buf(&arr, sizeof(arr));
-	printf("{ %lu, %lu }\n", arr[0], arr[1]);
+	printf("prng_buf  %lu, %lu\n", arr[0], arr[1]);
 
 	return 0;
 }
