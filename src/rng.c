@@ -1,12 +1,12 @@
-/*   
+/*
  * rnglibc - useful random number generators written in ANSI C
- * 
+ *
  * Written in 2024 by Woohyun Joh <jeremiahjoh@sungkyul.ac.kr>
- * 
+ *
  * To the extent possible under law, the author(s) have dedicated all copyright
  * and related and neighboring rights to this software to the public domain
  * worldwide. This software is distributed without any warranty.
- * 
+ *
  * You should have received a copy of the CC0 Public Domain Dedication along
  * with this software.
  */
@@ -42,7 +42,7 @@ prng_64()
 	return result;
 }
 
-static size_t 
+static size_t
 rotl_32(const size_t x, int k)
 {
 	return (x << k) | (x >> (32 - k));
@@ -97,7 +97,7 @@ prng_buf(void *buf, const size_t len)
 {
 	size_t i, r;
 
-	for (i = 0; i < len; i += sizeof(size_t)) {
+	for (i = 0; i < len / sizeof(size_t); i++) {
 		if ((r = prng()) == 0)
 			return -1;
 		memcpy((size_t *)buf + i, &r, sizeof(size_t));
@@ -120,3 +120,23 @@ osrng_buf(void *buf, const size_t len)
 
 	return 0;
 }
+
+#ifdef _TEST
+
+int
+main()
+{
+	size_t arr[2];
+
+	printf("%lu\n", osrng());
+	printf("%lu\n", prng());
+
+	osrng_buf(&arr, sizeof(arr));
+	printf("{ %lu, %lu }\n", arr[0], arr[1]);
+	prng_buf(&arr, sizeof(arr));
+	printf("{ %lu, %lu }\n", arr[0], arr[1]);
+
+	return 0;
+}
+
+#endif
