@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static size_t s[4] = { 0, 0, 0, 0 };
+static size_t buf[4] = { 0, 0, 0, 0 };
 
 static size_t
 rotl_64(const size_t x, int k)
@@ -26,20 +26,21 @@ rotl_64(const size_t x, int k)
 static size_t
 prng_64()
 {
-	const size_t result = rotl_64(s[0] + s[3], 23) + s[0];
+	size_t res, tmp;
 
-	const size_t t = s[1] << 17;
+	res = rotl_64(buf[0] + buf[3], 23) + buf[0];
+	tmp = buf[1] << 17;
 
-	s[2] ^= s[0];
-	s[3] ^= s[1];
-	s[1] ^= s[2];
-	s[0] ^= s[3];
+	buf[2] ^= buf[0];
+	buf[3] ^= buf[1];
+	buf[1] ^= buf[2];
+	buf[0] ^= buf[3];
 
-	s[2] ^= t;
+	buf[2] ^= tmp;
 
-	s[3] = rotl_64(s[3], 45);
+	buf[3] = rotl_64(buf[3], 45);
 
-	return result;
+	return res;
 }
 
 static size_t
@@ -51,28 +52,29 @@ rotl_32(const size_t x, int k)
 static size_t
 prng_32()
 {
-	const size_t result = rotl_32(s[0] + s[3], 7) + s[0];
+	size_t res, tmp;
 
-	const size_t t = s[1] << 9;
+	res = rotl_32(buf[0] + buf[3], 7) + buf[0];
+	tmp = buf[1] << 9;
 
-	s[2] ^= s[0];
-	s[3] ^= s[1];
-	s[1] ^= s[2];
-	s[0] ^= s[3];
+	buf[2] ^= buf[0];
+	buf[3] ^= buf[1];
+	buf[1] ^= buf[2];
+	buf[0] ^= buf[3];
 
-	s[2] ^= t;
+	buf[2] ^= tmp;
 
-	s[3] = rotl_32(s[3], 11);
+	buf[3] = rotl_32(buf[3], 11);
 
-	return result;
+	return res;
 }
 
 size_t
 prng()
 {
 	/* initialize buffer if numbers in s are all zero */
-	if ((s[0] | s[1] | s[2] | s[3]) == 0)
-		if (osrng_buf(s, sizeof(s)))
+	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
+		if (osrng_buf(buf, sizeof(buf)))
 			return 0;
 
 	/* compiler will optimize this code */
