@@ -124,21 +124,57 @@ osrng_buf(void *buf, const size_t len)
 
 #ifdef _TEST
 
+void
+print_osrng()
+{
+	printf("%#.16lx\n", osrng());
+}
+
+void
+print_prng()
+{
+	printf("%#.16lx\n", prng());
+}
+
+void
+print_osrng_buf()
+{
+	int buf[4];
+
+	osrng_buf(buf, sizeof(buf));
+
+	printf("%#.8x, %#.8x, %#.8x, %#.8x\n",
+	       buf[0], buf[1], buf[2], buf[3]);
+}
+
+void
+print_prng_buf()
+{
+	int buf[4];
+
+	prng_buf(buf, sizeof(buf));
+
+	printf("%#.8x, %#.8x, %#.8x, %#.8x\n",
+	       buf[0], buf[1], buf[2], buf[3]);
+}
+
 int
 main()
 {
-	size_t arr[2];
+	int i;
 
-	printf("osrng     %lu\n", osrng());
-	printf("prng      %lu\n", prng());
-
-	osrng_buf(&arr, sizeof(arr));
-	printf("osrng_buf %lu, %lu\n", arr[0], arr[1]);
-
-	arr[0] = arr[1] = 0;
-
-	prng_buf(&arr, sizeof(arr));
-	printf("prng_buf  %lu, %lu\n", arr[0], arr[1]);
+	printf("osrng()\n");
+	for (i = 0; i < 16; i++)
+		print_osrng();
+	printf("prng()\n");
+	for (i = 0; i < 16; i++)
+		print_prng();
+	printf("osrng_buf()\n");
+	for (i = 0; i < 16; i++)
+		print_osrng_buf();
+	printf("prng_buf()\n");
+	for (i = 0; i < 16; i++)
+		print_prng_buf();
 
 	return 0;
 }
