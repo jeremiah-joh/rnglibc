@@ -112,7 +112,7 @@ osrng_buf(void *buf, const size_t len)
 {
 	FILE *fp;
 
-	if ((fp = fopen("/dev/random", "rb")) == NULL)
+	if ((fp = fopen("/dev/random", "r")) == NULL)
 		return -1;
 	if (fread(buf, 1, len, fp) < len)
 		return -1;
