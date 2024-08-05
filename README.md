@@ -41,8 +41,10 @@ os_random_buf
 
 `int os_random_buf(const void *buf, const size_t len)`
 
-note: Fills random data from operating system in buffer. It returns 0 on
+Fills random data from operating system in buffer. It returns 0 on
 success, -1 if `/dev/random` file is not available.
+
+note: This function reads random bytes in `/dev/random` file.
 
 License
 -------
