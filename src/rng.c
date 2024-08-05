@@ -14,8 +14,7 @@
 #include "rng.h"
 #include <stdio.h>
 #include <string.h>
-
-static size_t buf[4] = { 0, 0, 0, 0 };
+#define BUF_LEN 4
 
 static size_t
 rotl_64(const size_t x, int k)
@@ -24,7 +23,7 @@ rotl_64(const size_t x, int k)
 }
 
 static size_t
-prng_64()
+prng_64(size_t buf[BUF_LEN])
 {
 	size_t res, tmp;
 
@@ -50,7 +49,7 @@ rotl_32(const size_t x, int k)
 }
 
 static size_t
-prng_32()
+prng_32(size_t buf[BUF_LEN])
 {
 	size_t res, tmp;
 
@@ -72,6 +71,9 @@ prng_32()
 size_t
 prng()
 {
+	/* This violates coding style, but there is no other option */
+	static size_t buf[BUF_LEN] = { 0, 0, 0, 0 };
+
 	/* initialize buffer if numbers in s are all zero */
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
 		if (osrng_buf(buf, sizeof(buf)))
@@ -79,9 +81,9 @@ prng()
 
 	/* compiler will optimize this code */
 	if (sizeof(size_t) == 8)
-		return prng_64();
+		return prng_64(buf);
 	if (sizeof(size_t) == 4)
-		return prng_32();
+		return prng_32(buf);
 
 	/* unreachable unless the CPU is neither 32 nor 64 bit */
 	return 0;
