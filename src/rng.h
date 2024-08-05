@@ -15,5 +15,5 @@
 
 size_t pseudo_random();
 size_t os_random();
-int pseudo_random_buf(const void *, const size_t);
-int os_random_buf(const void *, const size_t);
+int pseudo_random_buf(void *, const size_t);
+int os_random_buf(void *, const size_t);
