@@ -9,7 +9,7 @@ pseudo_random
 `size_t pseudo_random()`
 
 Returns pseudo-random number between 1 and maximum number of `size_t`. This
-function is guaranteed not to return 0 unless the processor is neither 64 nor
+function is guaranteed to not return 0 unless the processor is neither 64 nor
 32 bit.
 
 note: This function uses the xoshiro128++ algorithm when `size_t` is 4 bytes
@@ -21,7 +21,8 @@ os_random
 `size_t os_random()`
 
 Returns random number from operating system between 1 and maximum number of
-`size_t`.
+`size_t`. This function is guaranteed to not return 0 unless the `/dev/random`
+is not available.
 
 note: This function reads random bytes in `/dev/random` file.
 
