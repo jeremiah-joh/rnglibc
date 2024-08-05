@@ -97,7 +97,7 @@ os_random()
 }
 
 int
-pseudo_random_buf(void *buf, const size_t len)
+pseudo_random_buf(const void *buf, const size_t len)
 {
 	size_t i, r;
 
@@ -113,7 +113,7 @@ pseudo_random_buf(void *buf, const size_t len)
 }
 
 int
-os_random_buf(void *buf, const size_t len)
+os_random_buf(const void *buf, const size_t len)
 {
 	FILE *fp;
 
@@ -144,7 +144,7 @@ print_prng()
 void
 print_osrng_buf()
 {
-	int buf[4];
+	int buf[4] = { 0, 0, 0, 0 };
 
 	os_random_buf(buf, sizeof(buf));
 
@@ -155,7 +155,7 @@ print_osrng_buf()
 void
 print_prng_buf()
 {
-	int buf[4];
+	int buf[4] = { 0, 0, 0, 0 };
 
 	pseudo_random_buf(buf, sizeof(buf));
 
