@@ -13,11 +13,7 @@
 
 #include <stddef.h>
 
-/* general purpose pseudo-random number generator */
-size_t	prng();
-/* random number generator from operating system */
-size_t	osrng();
-/* fill buffer with pseudo-random number generator */
-int	prng_buf(void *, const size_t);
-/* fill buffer with random number generator from operating system */
-int	osrng_buf(void *, const size_t);
+size_t pseudo_random();
+size_t os_random();
+int pseudo_random_buf(void *, const size_t);
+int os_random_buf(void *, const size_t);
