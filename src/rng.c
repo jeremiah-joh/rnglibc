@@ -69,14 +69,14 @@ prng_32(size_t buf[BUF_LEN])
 }
 
 size_t
-prng()
+pseudo_random()
 {
 	/* This violates coding style, but there is no other option */
 	static size_t buf[BUF_LEN] = { 0, 0, 0, 0 };
 
 	/* initialize buffer if numbers in buffer are all zero */
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
-		if (osrng_buf(buf, sizeof(buf)))
+		if (os_random_buf(buf, sizeof(buf)))
 			return 0;
 
 	/* compiler will optimize this code */
@@ -90,27 +90,30 @@ prng()
 }
 
 size_t
-osrng()
+os_random()
 {
 	size_t r;
-	return osrng_buf(&r, sizeof(r)) ? 0 : r;
+	return os_random_buf(&r, sizeof(r)) ? 0 : r;
 }
 
 int
-prng_buf(void *buf, const size_t len)
+pseudo_random_buf(void *buf, const size_t len)
 {
 	size_t i, r;
 
-	for (i = 0, r = prng(); i < len / sizeof(r); i++, r = prng())
+	for (i = 0; i < len / sizeof(r); i++) {
+		r = pseudo_random();
 		memcpy((size_t *)buf + i, &r, sizeof(r));
+	}
 
+	r = pseudo_random();
 	memcpy((size_t *)buf + i, &r, len % sizeof(r));
 
 	return 0;
 }
 
 int
-osrng_buf(void *buf, const size_t len)
+os_random_buf(void *buf, const size_t len)
 {
 	FILE *fp;
 
@@ -129,13 +132,13 @@ osrng_buf(void *buf, const size_t len)
 void
 print_osrng()
 {
-	printf("%#.16lx\n", osrng());
+	printf("%#.16lx\n", os_random());
 }
 
 void
 print_prng()
 {
-	printf("%#.16lx\n", prng());
+	printf("%#.16lx\n", pseudo_random());
 }
 
 void
@@ -143,7 +146,7 @@ print_osrng_buf()
 {
 	int buf[4];
 
-	osrng_buf(buf, sizeof(buf));
+	os_random_buf(buf, sizeof(buf));
 
 	printf("%#.8x, %#.8x, %#.8x, %#.8x\n",
 	       buf[0], buf[1], buf[2], buf[3]);
@@ -154,7 +157,7 @@ print_prng_buf()
 {
 	int buf[4];
 
-	prng_buf(buf, sizeof(buf));
+	pseudo_random_buf(buf, sizeof(buf));
 
 	printf("%#.8x, %#.8x, %#.8x, %#.8x\n",
 	       buf[0], buf[1], buf[2], buf[3]);
