@@ -93,11 +93,17 @@ size_t
 os_random()
 {
 	size_t r;
-	return os_random_buf(&r, sizeof(r)) ? 0 : r;
+
+	for (;;) {
+		if (os_random_buf(&r, sizeof(r)))
+			return 0;
+		if (r)
+			return r;
+	}
 }
 
 int
-pseudo_random_buf(const void *buf, const size_t len)
+pseudo_random_buf(void *buf, const size_t len)
 {
 	size_t i, r;
 
@@ -113,7 +119,7 @@ pseudo_random_buf(const void *buf, const size_t len)
 }
 
 int
-os_random_buf(const void *buf, const size_t len)
+os_random_buf(void *buf, const size_t len)
 {
 	FILE *fp;
 
