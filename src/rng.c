@@ -74,7 +74,7 @@ prng()
 	/* This violates coding style, but there is no other option */
 	static size_t buf[BUF_LEN] = { 0, 0, 0, 0 };
 
-	/* initialize buffer if numbers in s are all zero */
+	/* initialize buffer if numbers in buffer are all zero */
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
 		if (osrng_buf(buf, sizeof(buf)))
 			return 0;
