@@ -94,12 +94,11 @@ os_random()
 {
 	size_t r;
 
-	for (;;) {
-		if (os_random_buf(&r, sizeof(r)))
-			return 0;
-		if (r)
+	while (!os_random_buf(&r, sizeof(r)))
+		if (r != 0)
 			return r;
-	}
+
+	return 0;
 }
 
 int
