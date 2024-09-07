@@ -1,10 +1,10 @@
 CC = cc
 CFLAGS = -ansi -Wall -Wextra -Wpedantic -Werror
 
-all: test
+all: rng
 
-test:
-	$(CC) $(CFLAGS) -o rng src/rng.c -D_TEST -g
+rng:
+	$(CC) $(CFLAGS) -o rng test/rng.c src/rng.c -g
 
 clean:
 	rm -f rng
