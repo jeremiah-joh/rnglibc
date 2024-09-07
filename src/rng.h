@@ -1,5 +1,5 @@
 /*
- * rnglibc - useful random number generators written in ANSI C
+ * rnglibc - random number generators written in ANSI C
  *
  * Written in 2024 by Woohyun Joh <jeremiahjoh@sungkyul.ac.kr>
  *
@@ -13,7 +13,5 @@
 
 #include <stddef.h>
 
-size_t pseudo_random();
-size_t os_random();
-int pseudo_random_buf(void *, const size_t);
-int os_random_buf(void *, const size_t);
+size_t pseudo_random(void);
+size_t os_random(void);
