@@ -74,7 +74,7 @@ prng_32(size_t buf[BUF_LEN])
 }
 
 size_t
-pseudo_random()
+pseudo_random(void)
 {
 	static size_t buf[BUF_LEN] = { 0, 0, 0, 0 };
 
@@ -93,7 +93,7 @@ pseudo_random()
 }
 
 size_t
-os_random()
+os_random(void)
 {
 	size_t r;
 
