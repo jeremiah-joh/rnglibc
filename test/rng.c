@@ -11,7 +11,6 @@
  * with this software.
  */
 
-#include "rng.h"
 #include "../src/rng.h"
 #include <stdio.h>
 
