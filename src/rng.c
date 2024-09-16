@@ -97,8 +97,5 @@ os_random(void)
 {
 	size_t r;
 
-	if (os_random_buf(&r, sizeof(r)))
-		return 0;
-
-	return r;
+	return os_random_buf(&r, sizeof(r)) ? 0 : r;
 }
