@@ -14,9 +14,7 @@
 #ifndef _RNG_H
 #define _RNG_H
 
-#include <stddef.h>
-
-size_t pseudo_random(void);
-size_t os_random(void);
+long pseudo_random(void);
+long os_random(void);
 
 #endif
