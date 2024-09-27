@@ -13,13 +13,26 @@
 
 #include "rng.h"
 #include <stdio.h>
+#include <limits.h>
 
 #define BUF_LEN 4
-#define BITS (sizeof(size_t) * 8)
+#define BITS (sizeof(long) * 8)
 #define ROTL(x, k) (((x) << (k)) | ((x) >> (BITS - k)))
 
+#if LONG_MAX == 0x7fffffffffffffff
+#define RO1 23
+#define SHL 17
+#define RO2 45
+#elif LONG_MAX == 0x7fffffff
+#define RO1 7
+#define SHL 9
+#define RO2 11
+#else
+#error "CPU is neither 64 nor 32 bit"
+#endif
+
 static int
-os_random_buf(void *buf, size_t len)
+os_random_buf(void *buf, long len)
 {
 	FILE *fp;
 
@@ -33,69 +46,35 @@ os_random_buf(void *buf, size_t len)
 	return 0;
 }
 
-static size_t
-prng_64(size_t buf[BUF_LEN])
-{
-	size_t res, tmp;
-
-	res = ROTL(buf[0] + buf[3], 23) + buf[0];
-	tmp = buf[1] << 17;
-
-	buf[2] ^= buf[0];
-	buf[3] ^= buf[1];
-	buf[1] ^= buf[2];
-	buf[0] ^= buf[3];
-
-	buf[2] ^= tmp;
-
-	buf[3] = ROTL(buf[3], 45);
-
-	return res;
-}
-
-static size_t
-prng_32(size_t buf[BUF_LEN])
-{
-	size_t res, tmp;
-
-	res = ROTL(buf[0] + buf[3], 7) + buf[0];
-	tmp = buf[1] << 9;
-
-	buf[2] ^= buf[0];
-	buf[3] ^= buf[1];
-	buf[1] ^= buf[2];
-	buf[0] ^= buf[3];
-
-	buf[2] ^= tmp;
-
-	buf[3] = ROTL(buf[3], 11);
-
-	return res;
-}
-
-size_t
+long
 pseudo_random(void)
 {
-	static size_t buf[BUF_LEN] = { 0, 0, 0, 0 };
+	static unsigned long buf[BUF_LEN] = { 0, 0, 0, 0 };
+	long res, tmp;
 
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
 		if (os_random_buf(buf, sizeof(buf)))
 			return 0;
 
-	/* compiler will optimize this code */
-	if (sizeof(size_t) == 8)
-		return prng_64(buf);
-	if (sizeof(size_t) == 4)
-		return prng_32(buf);
+	res = ROTL(buf[0] + buf[3], RO1) + buf[0];
+	tmp = buf[1] << SHL;
 
-	/* unreachable unless the CPU is neither 32 nor 64 bit */
-	return 0;
+	buf[2] ^= buf[0];
+	buf[3] ^= buf[1];
+	buf[1] ^= buf[2];
+	buf[0] ^= buf[3];
+
+	buf[2] ^= tmp;
+
+	buf[3] = ROTL(buf[3], RO2);
+
+	return res;
 }
 
-size_t
+long
 os_random(void)
 {
-	size_t r;
+	long r;
 
 	return os_random_buf(&r, sizeof(r)) ? 0 : r;
 }
