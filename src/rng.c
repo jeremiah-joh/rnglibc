@@ -28,7 +28,7 @@
 #define SHL 9
 #define RO2 11
 #else
-#error "CPU is neither 64 nor 32 bit"
+#error "size of type 'long' is too small"
 #endif
 
 static int
