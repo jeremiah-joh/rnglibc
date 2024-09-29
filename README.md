@@ -6,25 +6,20 @@ Random number generators written in ANSI C.
 pseudo_random
 -------------
 
-`size_t pseudo_random()`
+`long pseudo_random(void)`
 
-Returns pseudo-random number from 1 to maximum number of `size_t`. This
-function is guaranteed to not return 0 unless the processor is neither 64 nor
-32 bit.
+Returns a pseudo-random long integer in the range LONG_MIN to LONG_MAX.
 
-note: This function uses the xoshiro128++ algorithm when `size_t` is 4 bytes
-long, and the xoshiro256++ algorithm when `size_t` is 8 bytes long.
+This function uses xoshiro256++ or xorshiro128++ depends on size of `long`.
 
 os_random
 ---------
 
-`size_t os_random()`
+`long os_random(void)`
 
-Returns random number from operating system from 1 to maximum number of
-`size_t`. This function is guaranteed to not return 0 unless the `/dev/random`
-is not available.
+Returns a OS-generated random long integer in the range LONG_MIN to LONG_MAX.
 
-note: This function reads random bytes in `/dev/random` file.
+This function reads bytes from `/dev/random`.
 
 License
 -------
