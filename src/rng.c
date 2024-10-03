@@ -55,7 +55,7 @@ pseudo_random(void)
 
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
 		if (os_random_buf(buf, sizeof(buf)))
-			return 0;
+			return -1;
 
 	res = ROTL(buf[0] + buf[3], RO1) + buf[0];
 	tmp = buf[1] << SHL;
@@ -69,7 +69,7 @@ pseudo_random(void)
 
 	buf[3] = ROTL(buf[3], RO2);
 
-	return res;
+	return (res < 0) ? -res : res;
 }
 
 long
@@ -77,5 +77,8 @@ os_random(void)
 {
 	long r;
 
-	return os_random_buf(&r, sizeof(r)) ? 0 : r;
+	if (os_random_buf(&r, sizeof(r)))
+		return -1;
+
+	return (r < 0) ? -r : r;
 }
