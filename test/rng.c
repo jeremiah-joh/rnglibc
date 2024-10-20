@@ -19,10 +19,10 @@ main()
 {
 	int i;
 
-	for (i = 1; i <= 8; i++)
-		printf("%d. os_random():     %#.16lx\n", i, os_random());
-	for (i = 1; i <= 8; i++)
-		printf("%d. pseudo_random(): %#.16lx\n", i, pseudo_random());
+	for (i = 0; i < 16; i++)
+		printf("%ld\n", random_int());
+	for (i = 0; i < 16; i++)
+		printf("%g\n", random_flt());
 
 	return 0;
 }
