@@ -32,8 +32,8 @@
 #error "size of type 'long' is too small"
 #endif
 
-static int
-os_random_buf(void *buf, long len)
+int
+random_buf(void *buf, const size_t len)
 {
 	FILE *fp;
 
@@ -48,13 +48,13 @@ os_random_buf(void *buf, long len)
 }
 
 long
-pseudo_random(void)
+random_int(void)
 {
 	static unsigned long buf[BUF_LEN] = { 0, 0, 0, 0 };
 	long res, tmp;
 
 	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
-		if (os_random_buf(buf, sizeof(buf)))
+		if (random_buf(buf, sizeof(buf)))
 			return -1;
 
 	res = ROTL(buf[0] + buf[3], RO1) + buf[0];
@@ -66,19 +66,32 @@ pseudo_random(void)
 	buf[0] ^= buf[3];
 
 	buf[2] ^= tmp;
-
 	buf[3] = ROTL(buf[3], RO2);
 
 	return (res < 0) ? -res : res;
 }
 
-long
-os_random(void)
+double
+random_flt(void)
 {
-	long r;
+	static unsigned long buf[BUF_LEN] = { 0, 0, 0, 0 };
+	union { unsigned long i; double f; } res;
+	unsigned long tmp;
 
-	if (os_random_buf(&r, sizeof(r)))
-		return -1;
+	if ((buf[0] | buf[1] | buf[2] | buf[3]) == 0)
+		if (random_buf(buf, sizeof(buf)))
+			return -1.0;
 
-	return (r < 0) ? -r : r;
+	res.i = buf[0] + buf[3];
+	tmp = buf[1] << SHL;
+
+	buf[2] ^= buf[0];
+	buf[3] ^= buf[1];
+	buf[1] ^= buf[2];
+	buf[0] ^= buf[3];
+
+	buf[2] ^= tmp;
+	buf[3] = ROTL(buf[3], RO2);
+
+	return (res.f < 0) ? -res.f : res.f;
 }
